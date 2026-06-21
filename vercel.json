@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/student_referral/",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/student_referral/assets/(.*)",
