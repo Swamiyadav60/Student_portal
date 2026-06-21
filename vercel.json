@@ -2,10 +2,10 @@
   "rewrites": [
     {
       "source": "/student_referral/assets/(.*)",
-      "destination": "/student_referral/assets/$1"
+      "destination": "/assets/$1"
     },
     {
-      "source": "/((?!assets/).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
