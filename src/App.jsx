@@ -27,7 +27,7 @@ function ProtectedRoute({ children }) {
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/student_referral">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
