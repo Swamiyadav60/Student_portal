@@ -952,13 +952,257 @@ tbody td { padding: 10px 14px; vertical-align: middle; }
    RESPONSIVE
    ══════════════════════════════════════ */
 
-@media (max-width: 480px) {
+/* ── Hamburger button (hidden on desktop) ── */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.hamburger-btn:hover { background: var(--gray-light); }
+.hamburger-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--blue);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+/* ── Sidebar overlay (mobile backdrop) ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 149;
+  backdrop-filter: blur(2px);
+}
+.sidebar-overlay.open { display: block; }
+
+/* ── Responsive form grid ── */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ══════════════════════════════════════
+   TABLET  ≤ 1024px
+   ══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+  .search-box { width: 200px; }
+  .ref-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ══════════════════════════════════════
+   MOBILE  ≤ 768px
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Login page */
+  .login-left { display: none; }
+  .login-right { padding: 24px 16px; }
+
+  /* Registration form */
   .form-row { grid-template-columns: 1fr; }
   .reg-form-body { padding: 20px; }
   .reg-card-header { padding: 20px; }
+
+  /* ─ Layout ─ */
+  .layout {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─ Sidebar: hidden by default, slides in as drawer ─ */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 260px;
+    z-index: 150;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+  }
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  }
+
+  /* ─ Main area ─ */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─ Topbar: sticky, show hamburger ─ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 14px;
+    gap: 8px;
+    height: 54px;
+    flex-shrink: 0;
+  }
+  .hamburger-btn { display: flex; }
+  .topbar-title { font-size: 14px; flex: 1; }
+
+  /* ─ Search box in topbar ─ */
+  .search-box {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+    background: transparent;
+    border-color: transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .search-box span { margin: 0; font-size: 16px; }
+  .search-box input { 
+    width: 0; 
+    padding: 0; 
+    opacity: 0; 
+    transition: all 0.2s; 
+    font-size: 13px;
+  }
+  
+  .search-box:focus-within,
+  .search-box.has-text {
+    width: auto;
+    flex: 1;
+    max-width: 200px;
+    background: var(--gray-light);
+    border-color: var(--border);
+    padding: 7px 12px;
+    justify-content: flex-start;
+  }
+  .search-box:focus-within input,
+  .search-box.has-text input {
+    width: 100%;
+    opacity: 1;
+    margin-left: 8px;
+  }
+
+  /* ─ Content area ─ */
+  .content {
+    padding: 14px 12px;
+    overflow-x: hidden;
+  }
+
+  /* ─ Stats cards ─ */
+  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+  .stat-num { font-size: 22px; }
+
+  /* ─ Filter bar ─ */
+  .filter-bar { padding: 10px 12px; gap: 8px; }
+  .filter-select { flex: 1 1 calc(50% - 8px); min-width: 0; font-size: 11px; }
+  .clear-btn { margin-left: 0; width: 100%; text-align: center; }
+
+  /* ─ Table: horizontal scroll on mobile ─ */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-wrap table { min-width: 600px; }
+  .table-header { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+  .table-header h3 { width: 100%; }
+
+  /* ─ Referral grid ─ */
+  .ref-grid { grid-template-columns: 1fr; }
+
+  /* ─ Modals: 95% wide, internal scroll ─ */
+  .overlay { padding: 12px; align-items: flex-end; }
+  .modal {
+    width: 95%;
+    max-width: none;
+    border-radius: 14px 14px 10px 10px;
+    padding: 22px 18px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* ─ Form grid collapses to 1 column ─ */
+  .form-grid-2 { grid-template-columns: 1fr; }
+
+  /* ─ Detail Panel: full screen on mobile ─ */
+  .detail-panel {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  /* ─ Nav items touch-friendly ─ */
+  .nav-item { padding: 12px 10px; }
+
+  /* ─ Buttons ─ */
+  .btn-sm { min-height: 36px; }
 }
 
-@media (max-width: 768px) {
-  .login-left { display: none; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
+/* ══════════════════════════════════════
+   SMALL PHONES  ≤ 480px
+   ══════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  /* Registration */
+  .form-row { grid-template-columns: 1fr; }
+  .reg-form-body { padding: 16px; }
+  .reg-card-header { padding: 16px; }
+
+  /* ─ Topbar ─ */
+  .topbar { padding: 0 10px; height: 50px; }
+  .topbar-title { font-size: 13px; }
+  .search-box { max-width: 160px; }
+
+  /* ─ Stats ─ */
+  .stats-row { gap: 8px; }
+  .stat-card { padding: 12px; }
+  .stat-num { font-size: 20px; }
+  .stat-label { font-size: 10px; }
+
+  /* ─ Filter bar: full-width selects ─ */
+  .filter-select { flex: 1 1 100%; }
+
+  /* ─ Content ─ */
+  .content { padding: 12px 10px; }
+
+  /* ─ Modal ─ */
+  .overlay { padding: 8px; }
+  .modal { padding: 18px 14px; }
+  .modal-title { font-size: 15px; }
+
+  /* ─ Table ─ */
+  .table-header { padding: 8px 10px; }
+
+  /* ─ Ref card actions wrap ─ */
+  .ref-actions { flex-wrap: wrap; }
+  .ref-actions .btn-sm { flex: 1; text-align: center; }
+
+  /* ─ Touch-friendly minimum sizes ─ */
+  .btn-sm { min-height: 40px; padding: 8px 12px; }
+  .btn-cancel, .btn-confirm, .btn-danger { min-height: 44px; }
+  .wa-btn { width: 36px; height: 36px; }
+
+  /* ─ Toast position ─ */
+  .toast { bottom: 16px; font-size: 12px; padding: 8px 16px; }
+
+  /* ─ Detail panel header ─ */
+  .dp-header { padding: 16px; }
+  .dp-body { padding: 16px; }
 }

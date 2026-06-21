@@ -41,6 +41,7 @@ function saveVisibleCols(ids) { localStorage.setItem('sp_vis_cols', JSON.stringi
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [page, setPage] = useState('students');
   const [students, setStudents] = useState([]);
   const [colleges, setColleges] = useState([]);
@@ -295,8 +296,14 @@ export default function Dashboard() {
 
   return (
     <div className="layout">
+      {/* ── Sidebar Overlay (mobile) ── */}
+      <div
+        className={`sidebar-overlay${sidebarOpen ? ' open' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* ── Sidebar ── */}
-      <div className="sidebar">
+      <div className={`sidebar${sidebarOpen ? ' sidebar-open' : ''}`}>
         <div className="sidebar-logo">
           <div className="logo-mark">S</div>
           <div>
@@ -308,7 +315,7 @@ export default function Dashboard() {
         <div className="sidebar-section">
           <div className="sidebar-section-label">Main</div>
           {navItems.map(n => (
-            <div key={n.id} className={`nav-item${page === n.id ? ' active' : ''}`} onClick={() => setPage(n.id)}>
+            <div key={n.id} className={`nav-item${page === n.id ? ' active' : ''}`} onClick={() => { setPage(n.id); setSidebarOpen(false); }}>
               <span className="icon">{n.icon}</span> {n.label}
               {n.badge !== undefined && <span className="nav-badge">{n.badge}</span>}
             </div>
@@ -318,7 +325,7 @@ export default function Dashboard() {
         <div className="sidebar-section">
           <div className="sidebar-section-label">Settings</div>
           {settingsItems.map(n => (
-            <div key={n.id} className={`nav-item${page === n.id ? ' active' : ''}`} onClick={() => setPage(n.id)}>
+            <div key={n.id} className={`nav-item${page === n.id ? ' active' : ''}`} onClick={() => { setPage(n.id); setSidebarOpen(false); }}>
               <span className="icon">{n.icon}</span> {n.label}
             </div>
           ))}
@@ -339,12 +346,15 @@ export default function Dashboard() {
       <div className="main">
         {/* Topbar */}
         <div className="topbar">
+          <button className="hamburger-btn" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
+            <span></span><span></span><span></span>
+          </button>
           <div className="topbar-title">{pageTitle[page]}</div>
           {page === 'students' && (
-            <div className="search-box">
+            <label className={`search-box ${search ? 'has-text' : ''}`} htmlFor="top-search">
               <span>🔍</span>
-              <input type="text" placeholder="Search name, mobile, college..." value={search} onChange={e => setSearch(e.target.value)} />
-            </div>
+              <input id="top-search" type="text" placeholder="Search name, mobile..." value={search} onChange={e => setSearch(e.target.value)} />
+            </label>
           )}
           {page === 'students' && (
             <button className="btn-sm btn-red" onClick={() => setAddStudentOpen(true)}>+ Add Student</button>
@@ -646,7 +656,7 @@ export default function Dashboard() {
 
       {/* ── Add Student Modal ── */}
       <Modal open={addStudentOpen} onClose={() => setAddStudentOpen(false)} title="Add Student">
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div className="form-grid-2">
           <div className="form-field"><label>First Name *</label><input type="text" value={asForm.firstName} onChange={e => setAsForm(p=>({...p,firstName:e.target.value}))} placeholder="First name"/></div>
           <div className="form-field"><label>Last Name *</label><input type="text" value={asForm.lastName} onChange={e => setAsForm(p=>({...p,lastName:e.target.value}))} placeholder="Last name"/></div>
         </div>
@@ -674,11 +684,11 @@ export default function Dashboard() {
             )}
           </div>
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div className="form-grid-2">
           <div className="form-field"><label>City</label><input type="text" value={asForm.city} readOnly style={{ background:'#f8f8f8' }}/></div>
           <div className="form-field"><label>State</label><input type="text" value={asForm.state} readOnly style={{ background:'#f8f8f8' }}/></div>
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div className="form-grid-2">
           <div className="form-field"><label>Course *</label>
             <select value={asForm.course} onChange={e => setAsForm(p=>({...p,course:e.target.value}))}>
               <option value="">Select</option>{COURSES.map(c=><option key={c}>{c}</option>)}
@@ -714,7 +724,7 @@ export default function Dashboard() {
       {/* ── Add Referral Modal ── */}
       <Modal open={addRefOpen} onClose={() => setAddRefOpen(false)} title="New Influencer">
         <div className="form-field"><label>Influencer Name *</label><input type="text" value={refForm.name} onChange={e=>setRefForm(p=>({...p,name:e.target.value}))} placeholder="e.g. Priya Sharma"/></div>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div className="form-grid-2">
           <div className="form-field"><label>Phone</label><input type="tel" value={refForm.phone} onChange={e=>setRefForm(p=>({...p,phone:e.target.value}))} placeholder="+91 98765 43210"/></div>
           <div className="form-field"><label>Email</label><input type="email" value={refForm.email} onChange={e=>setRefForm(p=>({...p,email:e.target.value}))} placeholder="priya@email.com"/></div>
         </div>
