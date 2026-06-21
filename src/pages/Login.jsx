@@ -44,7 +44,7 @@ export default function Login() {
         </div>
 
         <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>
-          © 2026 SmartPrinter. All rights reserved.
+          ©2026 SmartPrinter. All rights reserved.
         </div>
       </div>
 
