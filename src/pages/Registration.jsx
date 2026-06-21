@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import {getColleges,saveCollege,saveStudent,getStudents,getCustomFields} from '../lib/storage';
+import { getColleges, saveCollege, saveStudent, getStudents, getCustomFields } from '../lib/storage';
 
-const COURSES = ['B.Tech / B.E.','M.Tech / M.E.','BCA','MCA','B.Sc','M.Sc','MBA','B.Com','B.A.','Other'];
-const YEARS = ['1st Year','2nd Year','3rd Year','4th Year','5th Year','Alumni'];
+const COURSES = ['B.Tech / B.E.', 'M.Tech / M.E.', 'BCA', 'MCA', 'B.Sc', 'M.Sc', 'MBA', 'B.Com', 'B.A.', 'Other'];
+const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Alumni'];
 
 export default function Registration() {
   const [searchParams] = useSearchParams();
@@ -15,7 +15,7 @@ export default function Registration() {
   const [customFields, setCustomFields] = useState([]);
   const [form, setForm] = useState({
     firstName: '', lastName: '', studentId: '', mobile: '', email: '',
-    collegeId: '', collegeName: '', city: '', state: '', course: '', year: '',customFields: {}
+    collegeId: '', collegeName: '', city: '', state: '', course: '', year: '', customFields: {}
   });
   const [errors, setErrors] = useState({});
   const [collegeQuery, setCollegeQuery] = useState('');
