@@ -42,6 +42,7 @@ function saveVisibleCols(ids) { localStorage.setItem('sp_vis_cols', JSON.stringi
 export default function Dashboard() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [page, setPage] = useState('students');
   const [students, setStudents] = useState([]);
   const [colleges, setColleges] = useState([]);
@@ -60,6 +61,8 @@ export default function Dashboard() {
   const [filterCity, setFilterCity] = useState('');
   const [filterState, setFilterState] = useState('');
   const [filterPOC, setFilterPOC] = useState('');
+
+  const activeFiltersCount = [filterStatus, filterRef, filterCollege, filterCity, filterState, filterPOC].filter(Boolean).length;
 
   // Column picker
   const [visCols, setVisCols] = useState(getVisibleCols());
@@ -350,28 +353,36 @@ export default function Dashboard() {
             <span></span><span></span><span></span>
           </button>
           <div className="topbar-title">{pageTitle[page]}</div>
-          {page === 'students' && (
-            <label className={`search-box ${search ? 'has-text' : ''}`} htmlFor="top-search">
-              <span>🔍</span>
-              <input id="top-search" type="text" placeholder="Search name, mobile..." value={search} onChange={e => setSearch(e.target.value)} />
-            </label>
-          )}
-          {page === 'students' && (
-            <button className="btn-sm btn-red" onClick={() => setAddStudentOpen(true)}>+ Add Student</button>
-          )}
-          {page === 'referrals' && (
-            <button className="btn-sm btn-red" onClick={() => setAddRefOpen(true)}>+ New Influencer</button>
-          )}
-          {page === 'fields' && (
-            <button className="btn-sm btn-red" onClick={() => setAddFieldOpen(true)}>+ Add Field</button>
-          )}
-          {page === 'colleges' && (
-            <button className="btn-sm btn-red" onClick={() => setAddCollegeOpen(true)}>+ Add College</button>
-          )}
+          <div className="topbar-actions">
+            {page === 'students' && (
+              <label className={`search-box ${search ? 'has-text' : ''}`} htmlFor="top-search">
+                <span>🔍</span>
+                <input id="top-search" type="text" placeholder="Search name, mobile..." value={search} onChange={e => setSearch(e.target.value)} />
+              </label>
+            )}
+            {page === 'students' && <button className="btn-sm btn-red" onClick={() => setAddStudentOpen(true)}>+ Add Student</button>}
+            {page === 'referrals' && <button className="btn-sm btn-red" onClick={() => setAddRefOpen(true)}>+ New Influencer</button>}
+            {page === 'fields' && <button className="btn-sm btn-red" onClick={() => setAddFieldOpen(true)}>+ Add Field</button>}
+            {page === 'colleges' && <button className="btn-sm btn-red" onClick={() => setAddCollegeOpen(true)}>+ Add College</button>}
+          </div>
         </div>
 
         {/* Content */}
         <div className="content">
+
+          {/* ══ MOBILE ACTIONS ══ */}
+          <div className="mobile-actions">
+            {page === 'students' && (
+              <label className="search-box-mobile" htmlFor="mobile-search">
+                <span style={{ marginRight: 8 }}>🔍</span>
+                <input id="mobile-search" type="text" placeholder="Search name, mobile, college..." value={search} onChange={e => setSearch(e.target.value)} />
+              </label>
+            )}
+            {page === 'students' && <button className="btn-sm btn-red w-full" onClick={() => setAddStudentOpen(true)}>+ Add Student</button>}
+            {page === 'referrals' && <button className="btn-sm btn-red w-full" onClick={() => setAddRefOpen(true)}>+ New Influencer</button>}
+            {page === 'fields' && <button className="btn-sm btn-red w-full" onClick={() => setAddFieldOpen(true)}>+ Add Field</button>}
+            {page === 'colleges' && <button className="btn-sm btn-red w-full" onClick={() => setAddCollegeOpen(true)}>+ Add College</button>}
+          </div>
 
           {/* ══ STUDENTS PAGE ══ */}
           {page === 'students' && (
@@ -387,41 +398,56 @@ export default function Dashboard() {
               </div>
 
               {/* Filter Bar */}
-              <div className="filter-bar">
-                <select className="filter-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
-                  <option value="">All Statuses</option>
-                  {STATUSES.map(s => <option key={s}>{s}</option>)}
-                </select>
-                <select className="filter-select" value={filterRef} onChange={e => setFilterRef(e.target.value)}>
-                  <option value="">All Sources</option>
-                  <option value="direct">Direct</option>
-                  {referrals.map(r => <option key={r.id} value={r.code}>{r.name}</option>)}
-                </select>
-                <select className="filter-select" value={filterCollege} onChange={e => setFilterCollege(e.target.value)} style={{ maxWidth: 160 }}>
-                  <option value="">All Colleges</option>
-                  {allCollegeNames.map(c => <option key={c}>{c}</option>)}
-                </select>
-                <select className="filter-select" value={filterCity} onChange={e => setFilterCity(e.target.value)}>
-                  <option value="">All Cities</option>
-                  {allCities.map(c => <option key={c}>{c}</option>)}
-                </select>
-                <select className="filter-select" value={filterState} onChange={e => setFilterState(e.target.value)}>
-                  <option value="">All States</option>
-                  {allStates.map(s => <option key={s}>{s}</option>)}
-                </select>
-                <select className="filter-select" value={filterPOC} onChange={e => setFilterPOC(e.target.value)}>
-                  <option value="">All POCs</option>
-                  {unassignedCount > 0 && <option value="__unassigned__">— Unassigned ({unassignedCount})</option>}
-                  {allPocs.map(p => <option key={p}>{p}</option>)}
-                </select>
-                <button className="clear-btn" onClick={clearFilters}>Clear all</button>
+              <button className="mobile-filter-btn" onClick={() => setMobileFiltersOpen(true)}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filters {activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}
+              </button>
+
+              <div className={`filter-bar ${mobileFiltersOpen ? 'open' : ''}`}>
+                <div className="mobile-filter-header">
+                  <h3>Filters</h3>
+                  <button onClick={() => setMobileFiltersOpen(false)}>✕</button>
+                </div>
+                <div className="filter-scroll-area">
+                  <select className="filter-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+                    <option value="">All Statuses</option>
+                    {STATUSES.map(s => <option key={s}>{s}</option>)}
+                  </select>
+                  <select className="filter-select" value={filterRef} onChange={e => setFilterRef(e.target.value)}>
+                    <option value="">All Sources</option>
+                    <option value="direct">Direct</option>
+                    {referrals.map(r => <option key={r.id} value={r.code}>{r.name}</option>)}
+                  </select>
+                  <select className="filter-select" value={filterCollege} onChange={e => setFilterCollege(e.target.value)} style={{ maxWidth: 160 }}>
+                    <option value="">All Colleges</option>
+                    {allCollegeNames.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                  <select className="filter-select" value={filterCity} onChange={e => setFilterCity(e.target.value)}>
+                    <option value="">All Cities</option>
+                    {allCities.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                  <select className="filter-select" value={filterState} onChange={e => setFilterState(e.target.value)}>
+                    <option value="">All States</option>
+                    {allStates.map(s => <option key={s}>{s}</option>)}
+                  </select>
+                  <select className="filter-select" value={filterPOC} onChange={e => setFilterPOC(e.target.value)}>
+                    <option value="">All POCs</option>
+                    {unassignedCount > 0 && <option value="__unassigned__">— Unassigned ({unassignedCount})</option>}
+                    {allPocs.map(p => <option key={p}>{p}</option>)}
+                  </select>
+                </div>
+                <button className="clear-btn desktop-only" onClick={clearFilters}>Clear all</button>
+                <div className="mobile-filter-footer">
+                  <button className="btn-cancel" onClick={clearFilters}>Clear All</button>
+                  <button className="btn-confirm" onClick={() => setMobileFiltersOpen(false)}>Apply Filters</button>
+                </div>
               </div>
 
               {/* Table */}
               <div className="table-wrap">
                 <div className="table-header">
                   <h3>{filteredStudents.length} Student{filteredStudents.length !== 1 ? 's' : ''}</h3>
-                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                  <div className="table-header-actions">
                     {/* Column Picker */}
                     <div className="col-picker-wrap" ref={colPickerRef}>
                       <button className="col-picker-btn" onClick={e => { e.stopPropagation(); setColPickerOpen(!colPickerOpen); }}>
@@ -451,9 +477,9 @@ export default function Dashboard() {
 
                 {filteredStudents.length === 0 ? (
                   <div className="empty-state">
-                    <div className="icon">🎓</div>
-                    <h4>No students found</h4>
-                    <p>Try adjusting your filters or add a new student.</p>
+                    <div className="empty-icon">🎓</div>
+                    <div className="empty-title">No students found</div>
+                    <div className="empty-desc">Try changing filters or add a student.</div>
                   </div>
                 ) : (
                   <table>
@@ -550,7 +576,7 @@ export default function Dashboard() {
                     const count = students.filter(s => s.refCode === r.code && !s.isDuplicate).length;
                     const dupCount = students.filter(s => s.duplicateAttempts?.some(a => a.refCode === r.code)).length;
                     const installed = students.filter(s => s.refCode === r.code && s.status === 'Installed').length;
-                    const link = `${window.location.origin}/register?ref=${r.code}&name=${encodeURIComponent(r.name)}`;
+                    const link = `${window.location.origin}/student_referral/register?ref=${r.code}&name=${encodeURIComponent(r.name)}`;
                     return (
                       <div key={r.id} className="ref-card">
                         <div className="ref-name">{r.name}</div>

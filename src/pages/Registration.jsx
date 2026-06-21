@@ -199,13 +199,13 @@ export default function Registration() {
             {/* Name row */}
             <div className="form-row">
               <div className="field">
-                <label>First Name <span className="req">*</span></label>
+                <label>First Name</label>
                 <input type="text" placeholder="Rahul" value={form.firstName} onChange={set('firstName')}
                   className={errors.firstName ? 'error' : ''} />
                 {errors.firstName && <div className="err-msg show">Required</div>}
               </div>
               <div className="field">
-                <label>Last Name <span className="req">*</span></label>
+                <label>Last Name</label>
                 <input type="text" placeholder="Sharma" value={form.lastName} onChange={set('lastName')}
                   className={errors.lastName ? 'error' : ''} />
                 {errors.lastName && <div className="err-msg show">Required</div>}
@@ -215,7 +215,7 @@ export default function Registration() {
             {/* Student ID */}
             <div className="form-row single">
               <div className="field">
-                <label>Student ID Number <span className="req">*</span></label>
+                <label>Student ID Number</label>
                 <input type="text" placeholder="e.g. 22CS1045" value={form.studentId} onChange={set('studentId')}
                   className={errors.studentId ? 'error' : ''} />
                 {errors.studentId && <div className="err-msg show">Required</div>}
@@ -225,7 +225,7 @@ export default function Registration() {
             {/* Mobile */}
             <div className="form-row single">
               <div className="field">
-                <label>Mobile Number <span className="req">*</span></label>
+                <label>Mobile Number</label>
                 <div className="phone-wrap">
                   <div className="phone-prefix">+91</div>
                   <input type="tel" placeholder="9876543210" maxLength="10" value={form.mobile} onChange={set('mobile')}
@@ -246,7 +246,7 @@ export default function Registration() {
             {/* College autocomplete */}
             <div className="form-row single">
               <div className="field" ref={ddRef}>
-                <label>College Name <span className="req">*</span></label>
+                <label>College Name</label>
                 <div className="autocomplete-wrap">
                   <input
                     type="text"
@@ -278,13 +278,13 @@ export default function Registration() {
             {/* City & State (auto-filled) */}
             <div className="form-row">
               <div className="field">
-                <label>City <span className="req">*</span></label>
+                <label>City</label>
                 <input type="text" value={form.city} readOnly style={{ background: '#f8f8f8' }}
                   className={errors.city ? 'error' : ''} />
                 {errors.city && <div className="err-msg show">Required</div>}
               </div>
               <div className="field">
-                <label>State <span className="req">*</span></label>
+                <label>State</label>
                 <input type="text" value={form.state} readOnly style={{ background: '#f8f8f8' }}
                   className={errors.state ? 'error' : ''} />
                 {errors.state && <div className="err-msg show">Required</div>}
@@ -294,7 +294,7 @@ export default function Registration() {
             {/* Course & Year */}
             <div className="form-row">
               <div className="field">
-                <label>Course <span className="req">*</span></label>
+                <label>Course</label>
                 <select value={form.course} onChange={set('course')} className={errors.course ? 'error' : ''}>
                   <option value="">Select course</option>
                   {COURSES.map(c => <option key={c}>{c}</option>)}
@@ -302,7 +302,7 @@ export default function Registration() {
                 {errors.course && <div className="err-msg show">Select a course</div>}
               </div>
               <div className="field">
-                <label>Year of Study <span className="req">*</span></label>
+                <label>Year of Study</label>
                 <select value={form.year} onChange={set('year')} className={errors.year ? 'error' : ''}>
                   <option value="">Select year</option>
                   {YEARS.map(y => <option key={y}>{y}</option>)}
@@ -314,7 +314,6 @@ export default function Registration() {
               <div className="field" key={field.id}>
                 <label>
                   {field.name}
-                  {field.required && <span className="req">*</span>}
                 </label>
 
                 <input
@@ -349,15 +348,15 @@ export default function Registration() {
               This college isn't in our list yet. Fill in the details to add it.
             </p>
             <div className="field">
-              <label>College Name <span className="req">*</span></label>
+              <label>College Name</label>
               <input type="text" placeholder="Full college name" value={newCollegeName} onChange={e => setNewCollegeName(e.target.value)} />
             </div>
             <div className="field">
-              <label>City <span className="req">*</span></label>
+              <label>City</label>
               <input type="text" placeholder="City" value={newCollegeCity} onChange={e => setNewCollegeCity(e.target.value)} />
             </div>
             <div className="field">
-              <label>State <span className="req">*</span></label>
+              <label>State</label>
               <input type="text" placeholder="State" value={newCollegeState} onChange={e => setNewCollegeState(e.target.value)} />
             </div>
             <div className="modal-actions">
