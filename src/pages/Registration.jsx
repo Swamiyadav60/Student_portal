@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import {getColleges,saveCollege,saveStudent,getStudents,getCustomFields} from '../lib/storage';
+=======
+import { getColleges, saveCollege, saveStudent, getStudents } from '../lib/storage';
+>>>>>>> ed81ca914da8c34e31b68d28e89d0146f04104b5
 
 const COURSES = ['B.Tech / B.E.','M.Tech / M.E.','BCA','MCA','B.Sc','M.Sc','MBA','B.Com','B.A.','Other'];
 const YEARS = ['1st Year','2nd Year','3rd Year','4th Year','5th Year','Alumni'];
@@ -12,10 +16,16 @@ export default function Registration() {
   const refName = searchParams.get('name') || '';
 
   const [colleges, setColleges] = useState([]);
+<<<<<<< HEAD
   const [customFields, setCustomFields] = useState([]);
   const [form, setForm] = useState({
     firstName: '', lastName: '', studentId: '', mobile: '', email: '',
     collegeId: '', collegeName: '', city: '', state: '', course: '', year: '',customFields: {}
+=======
+  const [form, setForm] = useState({
+    firstName: '', lastName: '', studentId: '', mobile: '', email: '',
+    collegeId: '', collegeName: '', city: '', state: '', course: '', year: ''
+>>>>>>> ed81ca914da8c34e31b68d28e89d0146f04104b5
   });
   const [errors, setErrors] = useState({});
   const [collegeQuery, setCollegeQuery] = useState('');
@@ -33,7 +43,10 @@ export default function Registration() {
 
   useEffect(() => {
     getColleges().then(setColleges);
+<<<<<<< HEAD
     getCustomFields().then(setCustomFields);
+=======
+>>>>>>> ed81ca914da8c34e31b68d28e89d0146f04104b5
     const handler = (e) => {
       if (ddRef.current && !ddRef.current.contains(e.target)) setShowDd(false);
     };
@@ -122,7 +135,11 @@ export default function Registration() {
       refLabel: decodeURIComponent(refName || refCode),
       status: existing ? existing.status : 'New Lead',
       notes: existing ? existing.notes : '',
+<<<<<<< HEAD
       customFields: form.customFields || {},
+=======
+      customFields: existing ? existing.customFields : {},
+>>>>>>> ed81ca914da8c34e31b68d28e89d0146f04104b5
       isDuplicate: !!existing,
       duplicateAttempts: existing
         ? [...(existing.duplicateAttempts || []), { refCode, refLabel: decodeURIComponent(refName || refCode), attemptedAt: new Date().toISOString() }]
@@ -310,6 +327,7 @@ export default function Registration() {
                 {errors.year && <div className="err-msg show">Select year</div>}
               </div>
             </div>
+<<<<<<< HEAD
             {customFields.map(field => (
               <div className="field" key={field.id}>
                 <label>
@@ -332,6 +350,8 @@ export default function Registration() {
                 />
               </div>
             ))}
+=======
+>>>>>>> ed81ca914da8c34e31b68d28e89d0146f04104b5
 
             <button type="submit" className="submit-btn" disabled={submitting}>
               {submitting ? 'Submitting...' : 'Register Student →'}
