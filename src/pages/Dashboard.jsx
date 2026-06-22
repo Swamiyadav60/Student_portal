@@ -576,7 +576,7 @@ export default function Dashboard() {
                     const count = students.filter(s => s.refCode === r.code && !s.isDuplicate).length;
                     const dupCount = students.filter(s => s.duplicateAttempts?.some(a => a.refCode === r.code)).length;
                     const installed = students.filter(s => s.refCode === r.code && s.status === 'Installed').length;
-                    const link = `${window.location.origin}/student_referral/register?ref=${r.code}&name=${encodeURIComponent(r.name)}`;
+                    const link = `${window.location.origin}/register?ref=${r.code}&name=${encodeURIComponent(r.name)}`;
                     return (
                       <div key={r.id} className="ref-card">
                         <div className="ref-name">{r.name}</div>
