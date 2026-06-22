@@ -1382,4 +1382,8 @@ tbody td { padding: 10px 14px; vertical-align: middle; }
   .dp-header { padding: 16px; }
   .dp-body { padding: 16px; }
 }
-
+.required {
+  color: #ef4444;
+  margin-left: 2px;
+  font-weight: 700;
+}
