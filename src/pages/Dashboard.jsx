@@ -13,7 +13,7 @@ import PocInput from '../components/PocInput';
 import Toast from '../components/Toast';
 import Modal from '../components/Modal';
 
-const STATUSES = ['New Lead', 'College Contacted', 'Discussion Started', 'Demo Done', 'Installed', 'Follow Up', 'Lost'];
+const STATUSES = ['New Lead', 'College Contacted', 'Discussion Started', 'Demo Done', 'Installed','Duplicate', 'Follow Up', 'Lost'];
 const COURSES = ['B.Tech / B.E.', 'M.Tech / M.E.', 'BCA', 'MCA', 'B.Sc', 'M.Sc', 'MBA', 'B.Com', 'B.A.', 'Other'];
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Alumni'];
 const ALL_COLUMNS = [
@@ -137,6 +137,11 @@ export default function Dashboard() {
   const allPocs = [...new Set(students.map(s => s.poc || ''))].filter(Boolean).sort();
   const unassignedCount = students.filter(s => !s.poc).length;
 
+  const phoneCounts = students.reduce((acc, s) => {
+    acc[s.mobile] = (acc[s.mobile] || 0) + 1;
+    return acc;
+  }, {});
+
   const clearFilters = () => {
     setSearch(''); setFilterStatus(''); setFilterRef(''); setFilterCollege('');
     setFilterCity(''); setFilterState(''); setFilterPOC('');
@@ -149,6 +154,15 @@ export default function Dashboard() {
     { label: 'In Discussion', num: students.filter(s => ['College Contacted', 'Discussion Started'].includes(s.status)).length, color: 'orange' },
     { label: 'Demo Done', num: students.filter(s => s.status === 'Demo Done').length, color: 'purple' },
     { label: 'Installed', num: students.filter(s => s.status === 'Installed').length, color: 'green' },
+    {
+      label: 'Duplicates',
+      num: students.filter(s =>
+        s.status === 'Duplicate' ||
+        s.isDuplicate ||
+        phoneCounts[s.mobile] > 1
+      ).length,
+      color: 'red'
+    }
   ];
 
   // ── Column toggle ─────────────────────────────────────────────────────────
@@ -504,7 +518,7 @@ export default function Dashboard() {
                           ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--blue-light)', color: 'var(--blue)', fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20 }}>{s.poc}</span>
                           : <span style={{ color: 'var(--gray)', fontSize: 12 }}>—</span>;
                         return (
-                          <tr key={s.id} className={s.isDuplicate ? 'duplicate-row' : ''}>
+                          <tr key={s.id} className={ s.status === 'Duplicate' || s.isDuplicate || phoneCounts[s.mobile] > 1 ? 'duplicate-row' : '' } >
                             {show('student') && (
                               <td>
                                 <div className="td-name" style={{ cursor: 'pointer' }} onClick={() => setSelectedStudent(s)}>
@@ -574,7 +588,14 @@ export default function Dashboard() {
                 <div className="ref-grid">
                   {referrals.map(r => {
                     const count = students.filter(s => s.refCode === r.code && !s.isDuplicate).length;
-                    const dupCount = students.filter(s => s.duplicateAttempts?.some(a => a.refCode === r.code)).length;
+                    const dupCount = students.filter(s =>
+                      s.refCode === r.code &&
+                      (
+                        s.status === 'Duplicate' ||
+                        s.isDuplicate ||
+                        phoneCounts[s.mobile] > 1
+                      )
+                    ).length;
                     const installed = students.filter(s => s.refCode === r.code && s.status === 'Installed').length;
                     const link = `${window.location.origin}/student_referral/register?ref=${r.code}&name=${encodeURIComponent(r.name)}`;
                     return (
