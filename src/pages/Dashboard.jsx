@@ -597,7 +597,7 @@ export default function Dashboard() {
                       )
                     ).length;
                     const installed = students.filter(s => s.refCode === r.code && s.status === 'Installed').length;
-                    const link = `${window.location.origin}/student_referral/register?ref=${r.code}&name=${encodeURIComponent(r.name)}`;
+                    const link = `${window.location.origin}/register?ref=${r.code}&name=${encodeURIComponent(r.name)}`;
                     return (
                       <div key={r.id} className="ref-card">
                         <div className="ref-name">{r.name}</div>
