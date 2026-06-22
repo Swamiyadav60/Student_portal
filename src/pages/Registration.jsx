@@ -83,15 +83,26 @@ export default function Registration() {
 
   const validate = () => {
     const e = {};
+
     if (!form.firstName) e.firstName = true;
-    if (!form.lastName) e.lastName = true;
     if (!form.studentId) e.studentId = true;
+    if (!form.email) e.email = true;
     if (!/^\d{10}$/.test(form.mobile)) e.mobile = true;
-    if (!form.collegeId || !form.collegeName) e.college = true;
+    if (!form.collegeId) e.college = true;
     if (!form.city) e.city = true;
     if (!form.state) e.state = true;
     if (!form.course) e.course = true;
     if (!form.year) e.year = true;
+
+    customFields.forEach(field => {
+      if (
+      field.required &&
+      !form.customFields?.[field.id]?.trim()
+      ) {
+      e[`custom_${field.id}`] = true;
+     }
+    });
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -199,7 +210,7 @@ export default function Registration() {
             {/* Name row */}
             <div className="form-row">
               <div className="field">
-                <label>First Name</label>
+                <label>First Name <span className="required">*</span></label>
                 <input type="text" placeholder="Rahul" value={form.firstName} onChange={set('firstName')}
                   className={errors.firstName ? 'error' : ''} />
                 {errors.firstName && <div className="err-msg show">Required</div>}
@@ -207,15 +218,15 @@ export default function Registration() {
               <div className="field">
                 <label>Last Name</label>
                 <input type="text" placeholder="Sharma" value={form.lastName} onChange={set('lastName')}
-                  className={errors.lastName ? 'error' : ''} />
-                {errors.lastName && <div className="err-msg show">Required</div>}
+                  />
+                
               </div>
             </div>
 
             {/* Student ID */}
             <div className="form-row single">
               <div className="field">
-                <label>Student ID Number</label>
+                <label>Student ID Number <span className="required">*</span></label>
                 <input type="text" placeholder="e.g. 22CS1045" value={form.studentId} onChange={set('studentId')}
                   className={errors.studentId ? 'error' : ''} />
                 {errors.studentId && <div className="err-msg show">Required</div>}
@@ -225,7 +236,7 @@ export default function Registration() {
             {/* Mobile */}
             <div className="form-row single">
               <div className="field">
-                <label>Mobile Number</label>
+                <label>Mobile Number <span className="required">*</span></label>
                 <div className="phone-wrap">
                   <div className="phone-prefix">+91</div>
                   <input type="tel" placeholder="9876543210" maxLength="10" value={form.mobile} onChange={set('mobile')}
@@ -238,15 +249,19 @@ export default function Registration() {
             {/* Email */}
             <div className="form-row single">
               <div className="field">
-                <label>Email Address</label>
-                <input type="email" placeholder="rahul@college.edu" value={form.email} onChange={set('email')} />
+                <label>Email Address <span className="required">*</span></label>
+                <input type="email" placeholder="rahul@college.edu" value={form.email} onChange={set('email')} 
+                className={errors.email ? 'error' : ''}/>
+                {errors.email && (
+                  <div className="err-msg show">Email is required</div>
+                )}
               </div>
             </div>
 
             {/* College autocomplete */}
             <div className="form-row single">
               <div className="field" ref={ddRef}>
-                <label>College Name</label>
+                <label>College Name <span className="required">*</span></label>
                 <div className="autocomplete-wrap">
                   <input
                     type="text"
@@ -258,17 +273,24 @@ export default function Registration() {
                     autoComplete="off"
                   />
                   {showDd && (
-                    <div className="autocomplete-dropdown">
-                      {filteredColleges.map(c => (
-                        <div key={c.id} className="dd-item" onMouseDown={() => selectCollege(c)}>
-                          <span>{c.name}</span>
-                          <span className="city-tag">{c.city}, {c.state}</span>
-                        </div>
-                      ))}
-                      <div className="dd-add" onMouseDown={() => openNewCollege(collegeQuery)}>
-                        <span>＋</span> Add "{collegeQuery}" as new college
-                      </div>
-                    </div>
+                      <div className="autocomplete-dropdown">
+
+                       {filteredColleges.length > 0 ? (
+                          filteredColleges.map(c => (
+                            <div key={c.id} className="dd-item" onMouseDown={() => selectCollege(c)}>
+                              <span>{c.name}</span>
+                              <span className="city-tag">
+                                {c.city}, {c.state}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="dd-add" onMouseDown={() => openNewCollege(collegeQuery)}>
+                            <span>＋</span> College not found. Click here to add "{collegeQuery}"
+                          </div>
+                        )}
+
+                     </div>
                   )}
                 </div>
                 {errors.college && <div className="err-msg show">Select or add a college</div>}
@@ -278,13 +300,13 @@ export default function Registration() {
             {/* City & State (auto-filled) */}
             <div className="form-row">
               <div className="field">
-                <label>City</label>
+                <label>City <span className="required">*</span></label>
                 <input type="text" value={form.city} readOnly style={{ background: '#f8f8f8' }}
                   className={errors.city ? 'error' : ''} />
                 {errors.city && <div className="err-msg show">Required</div>}
               </div>
               <div className="field">
-                <label>State</label>
+                <label>State <span className="required">*</span></label>
                 <input type="text" value={form.state} readOnly style={{ background: '#f8f8f8' }}
                   className={errors.state ? 'error' : ''} />
                 {errors.state && <div className="err-msg show">Required</div>}
@@ -294,7 +316,7 @@ export default function Registration() {
             {/* Course & Year */}
             <div className="form-row">
               <div className="field">
-                <label>Course</label>
+                <label>Course <span className="required">*</span></label>
                 <select value={form.course} onChange={set('course')} className={errors.course ? 'error' : ''}>
                   <option value="">Select course</option>
                   {COURSES.map(c => <option key={c}>{c}</option>)}
@@ -302,7 +324,7 @@ export default function Registration() {
                 {errors.course && <div className="err-msg show">Select a course</div>}
               </div>
               <div className="field">
-                <label>Year of Study</label>
+                <label>Year of Study <span className="required">*</span></label>
                 <select value={form.year} onChange={set('year')} className={errors.year ? 'error' : ''}>
                   <option value="">Select year</option>
                   {YEARS.map(y => <option key={y}>{y}</option>)}
@@ -311,14 +333,18 @@ export default function Registration() {
               </div>
             </div>
             {customFields.map(field => (
-              <div className="field" key={field.id}>
+                <div className="field" key={field.id}>
                 <label>
                   {field.name}
+                  {field.required && (
+                    <span className="required">*</span>
+                  )}
                 </label>
 
                 <input
                   type="text"
                   value={form.customFields?.[field.id] || ''}
+                  className={errors[`custom_${field.id}`] ? 'error' : ''}
                   onChange={(e) =>
                     setForm(prev => ({
                       ...prev,
@@ -329,6 +355,12 @@ export default function Registration() {
                     }))
                   }
                 />
+
+                {errors[`custom_${field.id}`] && (
+                  <div className="err-msg show">
+                    {field.name} is required
+                  </div>
+                )}
               </div>
             ))}
 
