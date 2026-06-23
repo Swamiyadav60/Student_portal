@@ -75,9 +75,11 @@ export default function Dashboard() {
   const [asCollegeDd, setAsCollegeDd] = useState(false);
   const asCollegeDdRef = useRef(null);
 
-  // Add Referral Modal
+  // Add / Edit Referral Modal
   const [addRefOpen, setAddRefOpen] = useState(false);
+  const [editRefOpen, setEditRefOpen] = useState(false);
   const [refForm, setRefForm] = useState({ name: '', phone: '', email: '', socialHandle: '', notes: '' });
+  const [editRefForm, setEditRefForm] = useState({ id: '', code: '', name: '', phone: '', email: '', socialHandle: '', notes: '' });
 
   // Add Field Modal
   const [addFieldOpen, setAddFieldOpen] = useState(false);
@@ -238,10 +240,40 @@ export default function Dashboard() {
     showToast('Referral link created!');
   };
 
+  const openEditRef = (r) => {
+    setEditRefForm({
+      id: r.id,
+      code: r.code,
+      name: r.name || '',
+      phone: r.phone || '',
+      email: r.email || '',
+      socialHandle: r.social_handle || r.socialHandle || '',
+      notes: r.notes || '',
+    });
+    setEditRefOpen(true);
+  };
+
+  const handleUpdateRef = async () => {
+    if (!editRefForm.name.trim()) { alert('Name is required'); return; }
+    const saved = await saveReferral({
+      id: editRefForm.id,
+      code: editRefForm.code,
+      name: editRefForm.name.trim(),
+      phone: editRefForm.phone,
+      email: editRefForm.email,
+      socialHandle: editRefForm.socialHandle,
+      notes: editRefForm.notes,
+    });
+    if (saved) setReferrals(prev => prev.map(r => r.id === saved.id ? saved : r));
+    setEditRefOpen(false);
+    showToast('Influencer updated!');
+  };
+
   const handleDeleteRef = async (id) => {
     if (!window.confirm("Delete this influencer? Their leads will remain in the database.")) return;
     await deleteReferral(id);
     setReferrals(prev => prev.filter(r => r.id !== id));
+    setEditRefOpen(false);
     showToast('Influencer deleted');
   };
 
@@ -597,7 +629,7 @@ export default function Dashboard() {
                         <div className="ref-actions">
                           <button className="copy-btn" onClick={() => copyLink(link)}>Copy Link</button>
                           <button className="btn-sm btn-outline" onClick={() => { setFilterRef(r.code); setPage('students'); }}>View Leads</button>
-                          <button className="btn-sm" style={{ background: 'var(--red-light)', color: 'var(--red)', border: 'none', borderRadius: 7, fontSize: 12, fontWeight: 600, padding: '7px 10px', cursor: 'pointer' }} onClick={() => handleDeleteRef(r.id)}>Delete</button>
+                          <button className="btn-sm btn-outline" onClick={() => openEditRef(r)}>Edit</button>
                         </div>
                       </div>
                     );
@@ -759,6 +791,30 @@ export default function Dashboard() {
         <div className="modal-actions">
           <button className="btn-cancel" onClick={() => setAddRefOpen(false)}>Cancel</button>
           <button className="btn-confirm" onClick={handleAddRef}>Generate Link</button>
+        </div>
+      </Modal>
+
+      {/* ── Edit Referral Modal ── */}
+      <Modal open={editRefOpen} onClose={() => setEditRefOpen(false)} title="Edit Influencer">
+        <div className="form-field"><label>Influencer Name *</label><input type="text" value={editRefForm.name} onChange={e => setEditRefForm(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Priya Sharma" /></div>
+        <div className="form-grid-2">
+          <div className="form-field"><label>Phone</label><input type="tel" value={editRefForm.phone} onChange={e => setEditRefForm(p => ({ ...p, phone: e.target.value }))} placeholder="+91 98765 43210" /></div>
+          <div className="form-field"><label>Email</label><input type="email" value={editRefForm.email} onChange={e => setEditRefForm(p => ({ ...p, email: e.target.value }))} placeholder="priya@email.com" /></div>
+        </div>
+        <div className="form-field"><label>Social Media</label><input type="text" value={editRefForm.socialHandle} onChange={e => setEditRefForm(p => ({ ...p, socialHandle: e.target.value }))} placeholder="Paste profile link or @handle" /></div>
+        <div className="form-field"><label>Notes</label><textarea rows="2" value={editRefForm.notes} onChange={e => setEditRefForm(p => ({ ...p, notes: e.target.value }))} placeholder="Any notes about this influencer..." /></div>
+        <div className="modal-actions">
+          <button className="btn-cancel" onClick={() => setEditRefOpen(false)}>Cancel</button>
+          <button className="btn-confirm" onClick={handleUpdateRef}>Save Changes</button>
+        </div>
+        <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+          <button
+            className="btn-sm"
+            style={{ width: '100%', background: 'var(--red-light)', color: 'var(--red)', fontSize: 12, border: '1px solid #fca5a5' }}
+            onClick={() => handleDeleteRef(editRefForm.id)}
+          >
+            Delete Influencer
+          </button>
         </div>
       </Modal>
 
