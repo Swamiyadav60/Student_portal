@@ -1387,3 +1387,6 @@ tbody td { padding: 10px 14px; vertical-align: middle; }
   margin-left: 2px;
   font-weight: 700;
 }
+.duplicate-row {
+  background: #fff3f3;
+}
