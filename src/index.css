@@ -1391,5 +1391,5 @@ tbody td { padding: 10px 14px; vertical-align: middle; }
   background: #fff3f3;
 }
 .stat-card.gray {
-  border-left: 4px solid #6b7280;
+  border-left : 4px solid #6b7280;
 }
