@@ -10,8 +10,14 @@ function ProtectedRoute({ children }) {
   const [session, setSession] = useState(undefined);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+  
+    setSession(session);
+  });
+  const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+
+    setSession(session);
+  });
     return () => listener.subscription.unsubscribe();
   }, []);
 
@@ -32,7 +38,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useEffect } from 'react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -13,14 +14,26 @@ export default function Login() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+
     setLoading(false);
     if (authError) {
       setError(authError.message);
     } else {
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     }
   };
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        navigate('/dashboard', { replace: true });
+      }
+    });
+  }, [navigate]);
 
   return (
     <div className="login-container">
