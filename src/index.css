@@ -1390,3 +1390,6 @@ tbody td { padding: 10px 14px; vertical-align: middle; }
 .duplicate-row {
   background: #fff3f3;
 }
+.stat-card.gray {
+  border-left: 4px solid #6b7280;
+}

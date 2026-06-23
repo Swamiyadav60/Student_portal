@@ -13,7 +13,7 @@ import PocInput from '../components/PocInput';
 import Toast from '../components/Toast';
 import Modal from '../components/Modal';
 
-const STATUSES = ['New Lead', 'College Contacted', 'Discussion Started', 'Demo Done', 'Installed','Duplicate', 'Follow Up', 'Lost'];
+const STATUSES = ['New Lead', 'College Contacted', 'Discussion Started','No Response', 'Demo Done', 'Installed','Duplicate', 'Follow Up', 'Lost'];
 const COURSES = ['B.Tech / B.E.', 'M.Tech / M.E.', 'BCA', 'MCA', 'B.Sc', 'M.Sc', 'MBA', 'B.Com', 'B.A.', 'Other'];
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Alumni'];
 const ALL_COLUMNS = [
@@ -152,6 +152,11 @@ export default function Dashboard() {
     { label: 'Total Students', num: students.length, color: 'blue' },
     { label: 'New Leads', num: students.filter(s => s.status === 'New Lead').length, color: 'red' },
     { label: 'In Discussion', num: students.filter(s => ['College Contacted', 'Discussion Started'].includes(s.status)).length, color: 'orange' },
+    {
+      label: 'No Response',
+      num: students.filter(s => s.status === 'No Response').length,
+      color: 'gray'
+    },
     { label: 'Demo Done', num: students.filter(s => s.status === 'Demo Done').length, color: 'purple' },
     { label: 'Installed', num: students.filter(s => s.status === 'Installed').length, color: 'green' },
     {
@@ -163,6 +168,7 @@ export default function Dashboard() {
       ).length,
       color: 'red'
     }
+
   ];
 
   // ── Column toggle ─────────────────────────────────────────────────────────
