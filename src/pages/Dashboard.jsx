@@ -25,6 +25,7 @@ const ALL_COLUMNS = [
   { id: 'poc', label: 'POC', locked: false },
   { id: 'referral', label: 'Referral', locked: false },
   { id: 'status', label: 'Status', locked: true },
+  { id: 'notes', label: 'Notes', locked: false },
 ];
 
 const WA_SVG = (
@@ -545,6 +546,7 @@ export default function Dashboard() {
                         {show('poc') && <th>POC</th>}
                         {show('referral') && <th>Referral</th>}
                         {show('status') && <th>Status</th>}
+                        {show('notes') && <th>Notes</th>}
                         {customFields.map(f => <th key={f.id}>{f.name}</th>)}
                         <th>Actions</th>
                       </tr>
@@ -598,6 +600,24 @@ export default function Dashboard() {
                                 <select className="status-select" value={s.status} onChange={e => handleStatusChange(s.id, e.target.value)}>
                                   {STATUSES.map(st => <option key={st}>{st}</option>)}
                                 </select>
+                              </td>
+                            )}
+                            {show('notes') && (
+                              <td>
+                                <div
+                                  style={{
+                                    maxWidth: '300px',
+                                    overflow: 'auto',
+                                    display: '-webkit-box',
+                                    WebkitBoxOrient: 'vertical',
+                                    WebkitLineClamp: 3,
+                                    lineHeight: '1.4',
+                                    fontSize: '12px'
+                                  }}
+                                  title={s.notes || ''}
+                                >
+                                 {s.notes || '—'}
+                                </div>
                               </td>
                             )}
                             {customFields.map(f => <td key={f.id}>{s.customFields?.[f.id] || '—'}</td>)}
